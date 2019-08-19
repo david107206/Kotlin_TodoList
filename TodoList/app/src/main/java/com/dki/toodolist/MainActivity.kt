@@ -2,6 +2,7 @@ package com.dki.toodolist
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import io.realm.Realm
@@ -11,7 +12,6 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.jetbrains.anko.startActivity
-import temp.TodoListAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,10 +29,15 @@ class MainActivity : AppCompatActivity() {
         val adapter = TodoListAdapter(realmResult)
         listView.adapter = adapter
 
-        realmResult.addChangeListener { _ -> adapter.notifyDataSetChanged() }
-
+      /*  realmResult.addChangeListener { _ -> adapter.notifyDataSetChanged() }
         listView.setOnItemClickListener { parent, view, position, id ->
-
+            Log.d("MainActivity" , "when click id : " + id)
+            startActivity<EditActivity>("id" to id)
+        }*/
+        realmResult.addChangeListener { _ -> adapter.notifyDataSetChanged() }
+        listView.setOnItemClickListener { parent, view, position, id ->
+            Log.d("MainActivity" , "when click id : " + id)
+            // 할 일 수정
             startActivity<EditActivity>("id" to id)
         }
 

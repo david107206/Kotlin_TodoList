@@ -2,6 +2,7 @@ package com.dki.toodolist
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import io.realm.Realm
 import io.realm.kotlin.createObject
@@ -27,10 +28,12 @@ class EditActivity : AppCompatActivity() {
             updateMode(id)
         }
 
-
-    /*    calendar.set(Calendar.YEAR , year)
-        calendar.set(Calendar.MONTH , momth)
-        calendar.set(Calendar.DAY_OF_MONTH , dayOfMonth)*/
+        // 캘린더뷰의 날짜를 선택했을 때 Caleandar 객체에 설정
+        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        }
 
     }
 
@@ -61,12 +64,9 @@ class EditActivity : AppCompatActivity() {
 
     private fun insertTodo(){
         realm.beginTransaction()
-
         val newItem = realm.createObject<Todo>(nextId())
-
         newItem.title = todoEditText.text.toString()
         newItem.date  = calendar.timeInMillis
-
         realm.commitTransaction()
 
         alert("내용이 추가되었습니다."){
@@ -76,7 +76,6 @@ class EditActivity : AppCompatActivity() {
 
     private fun updateTodo(id: Long){
         realm.beginTransaction()
-
         val updateItem = realm.where<Todo>().equalTo("id", id).findFirst()!!
 
         updateItem.title = todoEditText.text.toString()
@@ -106,7 +105,9 @@ class EditActivity : AppCompatActivity() {
     private fun nextId() : Int {
         val maxId = realm.where<Todo>().max("id")
         if(maxId != null){
+            Log.d("EditActivity" , "nextId return value : " + (maxId.toInt() + 1))
             return maxId.toInt() + 1
+
         }
         return 0
     }

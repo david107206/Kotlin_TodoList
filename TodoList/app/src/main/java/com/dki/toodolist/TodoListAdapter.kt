@@ -24,17 +24,19 @@ class TodoListAdapter(realmResult : OrderedRealmCollection<Todo>) : RealmBaseAda
             vh = view.tag as ViewHolder
         }
 
-        if(adapterData != null){
-            val item = adapterData!![position]
+        adapterData?.let {
+            val item = it[position]
             vh.dateTextView.text = item.title
-            vh.dateTextView2.text = DateFormat.format("yyyy/MM/dd" , item.date)
-
+            vh.dateTextView2.text = DateFormat.format("yyyy/MM/dd", item.date)
         }
 
         return view
     }
 
     override fun getItemId(position: Int): Long {
+        adapterData?.let {
+            return it[position].id
+        }
         return super.getItemId(position)
     }
 
